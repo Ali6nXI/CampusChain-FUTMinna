@@ -93,7 +93,7 @@ CampusChain-FUTMinna/
 
 | Document | Link |
 |---|---|
-| 📋 Product Requirements Document (PRD) | [View PDF](https://github.com/YOUR-USERNAME/CampusChain-FUTMinna/blob/main/CampusChain_PRD.pdf) |
+| 📋 Product Requirements Document (PRD) | [View PDF](https://github.com/Ali6nXI/CampusChain-FUTMinna/blob/main/CampusChain_PRD.pdf) |
 | 📰 2024 FUT Minna Research Paper | [Electrica Journal](https://electricajournal.org/index.php/pub/article/view/1162/1159) |
 | 🎓 FUT Minna PG Thesis Guidelines 2023 | [View Guidelines](http://irepo.futminna.edu.ng:8080/jspui/bitstream/123456789/30099/1/PG%20Thesis%20Guidelines_2023_%20%281%29.pdf) |
 
