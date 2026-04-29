@@ -92,14 +92,14 @@ export default function SellEnergy({ account }) {
                 </button>
                 {txHash && (
                     <div className="bg-green-900 border border-green-600 rounded-lg p-3 text-sm">
-                        <p className="text-green-400 font-semibold">Listed successfully!</p>
-
-                        href={`https://amoy.polygonscan.com/tx/${txHash}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-400 underline break-all"
-                        <a>
-                            View on Polygonscan: {txHash.slice(0, 20)}...
+                        <p className="text-green-400 font-semibold mb-1">Listed successfully!</p>
+                        <a
+                            href={`https://amoy.polygonscan.com/tx/${txHash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-400 underline break-all"
+                        >
+                            View on Polygonscan ↗
                         </a>
                     </div>
                 )}
