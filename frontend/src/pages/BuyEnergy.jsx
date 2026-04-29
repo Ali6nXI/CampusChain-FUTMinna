@@ -63,59 +63,54 @@ export default function BuyEnergy({ account }) {
             {txHash && (
                 <div className="bg-green-900 border border-green-600 rounded-lg p-3 text-sm mb-4">
                     <p className="text-green-400 font-semibold">Purchase successful!</p>
-
-                    href={`https://amoy.polygonscan.com/tx/${txHash}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-400 underline break-all"
-          >
-                    View on Polygonscan: {txHash.slice(0, 20)}...
-                </a>
-        </div>
-    )
-}
-
-{
-    error && (
-        <div className="bg-red-900 border border-red-600 rounded-lg p-3 text-sm text-red-400 mb-4">
-            {error}
-        </div>
-    )
-}
-
-{
-    loading ? (
-        <p className="text-gray-400">Loading available listings...</p>
-    ) : listings.length === 0 ? (
-        <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 text-center">
-            <p className="text-gray-400 text-lg">No energy listings available right now.</p>
-            <p className="text-gray-500 text-sm mt-2">Check back later or ask a building to list surplus energy.</p>
-        </div>
-    ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {listings.map((listing) => (
-                <div key={listing.id} className="bg-gray-800 rounded-xl p-5 border border-gray-700">
-                    <div className="flex justify-between items-start mb-3">
-                        <h3 className="font-bold text-lg">{listing.buildingName}</h3>
-                        <span className="bg-green-900 text-green-400 text-xs px-2 py-1 rounded-full">Active</span>
-                    </div>
-                    <div className="space-y-2 text-sm text-gray-300 mb-4">
-                        <p>Energy: <span className="text-white font-semibold">{listing.energyAmount} Wh</span></p>
-                        <p>Price: <span className="text-yellow-400 font-semibold">{listing.pricePerWh} CET/Wh</span></p>
-                        <p>Seller: <span className="text-gray-400">{listing.seller.slice(0, 6)}...{listing.seller.slice(-4)}</span></p>
-                    </div>
-                    <button
-                        onClick={() => handleBuy(listing.id)}
-                        disabled={isDisabled(listing)}
-                        className="w-full bg-yellow-400 text-gray-900 py-2 rounded-lg font-bold hover:bg-yellow-300 transition disabled:opacity-50 text-sm"
+                    <a
+                        href={`https://amoy.polygonscan.com/tx/${txHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-400 underline break-all"
                     >
-                        {getButtonLabel(listing)}
-                    </button>
+                        View on Polygonscan: {txHash.slice(0, 20)}...
+                    </a>
                 </div>
-            ))}
+            )}
+
+            {error && (
+                <div className="bg-red-900 border border-red-600 rounded-lg p-3 text-sm text-red-400 mb-4">
+                    {error}
+                </div>
+            )}
+
+            {loading ? (
+                <p className="text-gray-400">Loading available listings...</p>
+            ) : listings.length === 0 ? (
+                <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 text-center">
+                    <p className="text-gray-400 text-lg">No energy listings available right now.</p>
+                    <p className="text-gray-500 text-sm mt-2">Check back later or ask a building to list surplus energy.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {listings.map((listing) => (
+                        <div key={listing.id} className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+                            <div className="flex justify-between items-start mb-3">
+                                <h3 className="font-bold text-lg">{listing.buildingName}</h3>
+                                <span className="bg-green-900 text-green-400 text-xs px-2 py-1 rounded-full">Active</span>
+                            </div>
+                            <div className="space-y-2 text-sm text-gray-300 mb-4">
+                                <p>Energy: <span className="text-white font-semibold">{listing.energyAmount} Wh</span></p>
+                                <p>Price: <span className="text-yellow-400 font-semibold">{listing.pricePerWh} CET/Wh</span></p>
+                                <p>Seller: <span className="text-gray-400">{listing.seller.slice(0, 6)}...{listing.seller.slice(-4)}</span></p>
+                            </div>
+                            <button
+                                onClick={() => handleBuy(listing.id)}
+                                disabled={isDisabled(listing)}
+                                className="w-full bg-yellow-400 text-gray-900 py-2 rounded-lg font-bold hover:bg-yellow-300 transition disabled:opacity-50 text-sm"
+                            >
+                                {getButtonLabel(listing)}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
-    )
-}
-    </div >
-  );
+    );
 }
