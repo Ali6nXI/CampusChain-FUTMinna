@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const energyRoutes = require("./routes/energy");
+const { startMQTTSubscriber, getLatestReadings } = require("./services/mqttService");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +14,12 @@ app.use(express.json());
 
 // Routes
 app.use("/api/energy", energyRoutes);
+
+// IoT meter readings endpoint
+app.get("/api/meters", (req, res) => {
+    const readings = getLatestReadings();
+    res.json({ success: true, readings });
+});
 
 // Health check
 app.get("/", (req, res) => {
@@ -25,6 +32,9 @@ app.get("/", (req, res) => {
         }
     });
 });
+
+// Start MQTT subscriber
+startMQTTSubscriber();
 
 app.listen(PORT, () => {
     console.log(`CampusChain backend running on port ${PORT}`);

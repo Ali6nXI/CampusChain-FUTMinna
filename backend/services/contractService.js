@@ -35,11 +35,11 @@ try {
         wallet
     );
 
-    console.log("Contracts connected successfully");
+    console.log("✅ Contracts connected successfully");
     console.log("EnergyTrade:", process.env.ENERGY_TRADE_ADDRESS);
     console.log("EnergyToken:", process.env.ENERGY_TOKEN_ADDRESS);
 } catch (error) {
-    console.error("Contract connection failed:", error.message);
+    console.error("❌ Contract connection failed:", error.message);
 }
 
 module.exports = { energyTrade, energyToken, provider };
