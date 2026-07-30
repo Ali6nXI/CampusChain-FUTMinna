@@ -1,292 +1,366 @@
 # ⚡ CampusChain – FUT Minna
 
-> **A Blockchain + IoT Peer-to-Peer Energy Trading System for FUT Minna Campus Microgrid**
+> **A Blockchain + IoT Peer-to-Peer Energy Trading Prototype for the FUT Minna Campus Microgrid**
 
-![Status](https://img.shields.io/badge/Status-Prototype%20Complete-brightgreen)
+![Status](https://img.shields.io/badge/Status-Working%20Prototype%20(Testnet)-brightgreen)
 ![Blockchain](https://img.shields.io/badge/Blockchain-Polygon%20Amoy%20Testnet-8247E5?logo=ethereum)
-![IoT](https://img.shields.io/badge/IoT-Python%20MQTT%20Simulation-C51A4A?logo=raspberrypi)
-![Frontend](https://img.shields.io/badge/Frontend-React%20+%20Vite%20+%20Tailwind-61DAFB?logo=react)
+![Contracts](https://img.shields.io/badge/Contracts-Deployed%20%26%20Verified%20Live-success)
+![Tests](https://img.shields.io/badge/Hardhat%20Tests-7%2F7%20Passing-brightgreen)
+![IoT](https://img.shields.io/badge/IoT-Simulated%20(PZEM--004T)-orange?logo=raspberrypi)
+![Frontend](https://img.shields.io/badge/Frontend-React%2019%20+%20Vite%20+%20Tailwind-61DAFB?logo=react)
 ![License](https://img.shields.io/badge/License-Academic%20Use%20Only-blue)
+
+---
+
+## 👤 Project Details
+
+| Field | Detail |
+|---|---|
+| **Student** | Joseph Ochoche Ogangbo |
+| **Matriculation Number** | 2021/1/84514CF |
+| **Programme** | B.Tech, Information Technology (IFT) |
+| **School** | School of Information and Communication Technology (SICT) |
+| **Institution** | Federal University of Technology, Minna, Niger State, Nigeria |
+| **Supervisor** | Prof. Ojerinde |
+| **Project Type** | Final Year Undergraduate Project (B.Tech) |
+| **Network** | Polygon Amoy Testnet (Chain ID `80002`) — test tokens only |
 
 ---
 
 ## 📌 What is CampusChain?
 
-CampusChain is a **blockchain-enabled, IoT-integrated peer-to-peer (P2P) energy trading prototype** built as a postgraduate thesis project at the Federal University of Technology, Minna (FUT Minna). It enables campus buildings — hostels, labs, and lecture halls — to **securely trade surplus solar energy** using real smart contracts deployed on the Polygon Amoy testnet.
+CampusChain is a **blockchain-enabled, IoT-integrated peer-to-peer (P2P) energy trading prototype**. It allows campus buildings — hostels, laboratories, lecture halls and administrative blocks — to list and trade **surplus solar energy** with one another through smart contracts deployed on a public blockchain testnet.
 
-All trades use **test tokens only** — no real money is involved. The system is fully isolated from the national grid (NEPA/PHCN).
+The core research claim is that a distributed ledger can deliver **fair, transparent and fraud-resistant** internal energy allocation, so that surplus generation from the REA/AfDB-funded solar-hybrid plant is redistributed on campus instead of being wasted while diesel generators continue to burn fuel.
+
+> ⚠️ **Academic prototype.** All trades use valueless **test tokens** on a public testnet. The system is fully isolated from the national grid (NEPA/PHCN/TCN), performs no real billing, and is **not intended for production deployment**.
 
 ---
 
 ## 🔍 Problem Statement
 
-FUT Minna's campus is powered by a solar-hybrid plant funded by REA/AfDB. Despite this, the campus suffers from:
+FUT Minna operates a solar-hybrid plant funded under the REA/AfDB rural electrification programme. Despite this investment, four problems persist:
 
-| Problem | Impact |
-|---|---|
-| ⚡ Surplus solar energy going to waste | Inefficient use of existing infrastructure |
-| 🛢️ High diesel generator costs | Unnecessary recurring expenditure |
-| 📊 Metering fraud | Loss of trust and accountability |
-| 🔒 No transparent energy allocation | No mechanism for fair, auditable internal trading |
+| # | Problem | Impact |
+|---|---|---|
+| 1 | ⚡ Surplus solar generation is unused | Installed capacity is under-utilised; energy is curtailed or wasted |
+| 2 | 🛢️ Continued diesel generator reliance | Recurring fuel and maintenance expenditure |
+| 3 | 📊 Metering fraud and disputed readings | Loss of institutional trust and accountability |
+| 4 | 🔒 No transparent allocation mechanism | No auditable way to reallocate surplus between buildings |
 
-CampusChain addresses all four problems through a tamper-resistant, distributed architecture.
-
----
-
-## 🚀 Key Features
-
-- 📜 **Smart Contracts** — ERC-20 token (CET) + P2P trading contract deployed on Polygon Amoy testnet
-- 🔌 **IoT Simulation** — Python MQTT publisher simulating 4 campus buildings via HiveMQ broker
-- 🖥️ **Web Dashboard** — React.js interface for buying/selling surplus solar energy in real time
-- 🔗 **MQTT + Node.js Pipeline** — Live IoT data flowing from simulator to dashboard
-- 🏫 **Campus-Isolated Design** — Decoupled from NEPA/PHCN, operates as a standalone microgrid
-- 🧾 **Immutable Audit Trail** — Every energy trade recorded on-chain and verifiable on Polygonscan
+CampusChain addresses these by placing every listing and every trade on a **tamper-evident, publicly auditable ledger**, with meter data supplied by an independent IoT telemetry layer.
 
 ---
 
-## 🛠️ Tech Stack
+## ✅ Verified System Status
+
+| Layer | Status | How it was verified |
+|---|---|---|
+| **Smart contracts** | ✅ Deployed & live on-chain | `eth_getCode` returns bytecode at both addresses; `name()` → `CampusEnergyToken`, `symbol()` → `CET`, `totalSupply()` → 1,000,000 CET |
+| **Contract linkage** | ✅ Correct | `EnergyTrade.energyToken()` resolves to the deployed `EnergyToken` address |
+| **On-chain state** | ✅ 6 listings recorded | `listingCount()` → `6`; all six readable via `listings(uint256)` |
+| **Client-side signing** | ✅ Working | Listing 6 (`ROOM1`) was created from the browser via MetaMask, not by a server key |
+| **ERC-20 approval flow** | ✅ Implemented | `BuyEnergy.jsx` reads `allowance()` and calls `approve()` before `buyEnergy()` |
+| **Backend key custody** | ✅ Eliminated | Backend starts and serves all endpoints with **no `PRIVATE_KEY`** in `.env` |
+| **Hardhat test suite** | ✅ 7/7 passing | `npx hardhat test` on a clean clone with no `.env` — 7 passing (763 ms) |
+| **Solidity compilation** | ✅ Clean | 10 Solidity files compiled successfully, solc `0.8.28`, evm target `paris` |
+| **IoT → MQTT pipeline** | ✅ Working | Live publish/subscribe test against `broker.hivemq.com`: 4/4 building payloads delivered; malformed payloads rejected |
+| **Frontend production build** | ✅ Succeeds | `npm run build` → 229 modules transformed, built in 770 ms |
+| **Physical hardware** | ❌ Not implemented | `iot/` contains a numerical simulator only — no Raspberry Pi or PZEM-004T code |
+| **Oracle binding** | ❌ Not implemented | Nothing cryptographically links a meter reading to a listed quantity (see Limitations) |
+
+---
+
+## 🛠️ Technology Stack
 
 | Layer | Technology |
 |---|---|
-| **Blockchain** | Polygon Amoy Testnet, Solidity, Hardhat |
-| **Smart Contracts** | ERC-20 (CET Token), P2P EnergyTrade contract |
-| **IoT Simulation** | Python, paho-mqtt, HiveMQ public broker |
-| **Backend** | Node.js, Express, ethers.js, MQTT |
-| **Frontend** | React.js, Vite, Tailwind CSS, ethers.js, axios |
-| **Wallet** | MetaMask |
+| **Blockchain** | Polygon Amoy Testnet (Chain ID 80002), Solidity `0.8.28`, Hardhat `2.28` |
+| **Contracts** | OpenZeppelin ERC-20, `Ownable`, `ReentrancyGuard` |
+| **IoT (simulated)** | Python 3, `paho-mqtt` 2.1.0, HiveMQ public broker |
+| **Backend** | Node.js 22, Express 5, ethers.js 6, MQTT.js 5 |
+| **Frontend** | React 19, Vite 8, Tailwind CSS 3.4, React Router 7, ethers.js 6, axios |
+| **Wallet** | MetaMask — signs all listing and purchase transactions |
+
+> **Node.js 22.13.0 or later is mandatory.** Hardhat 2.28 hard-refuses to start on Node 20 with `ERROR: You are using Node.js 20.x which is not supported by Hardhat`.
 
 ---
 
-## 📋 Deployed Contracts (Polygon Amoy Testnet)
+## 📋 Deployed Contracts — Polygon Amoy Testnet
 
-| Contract | Address |
-|---|---|
-| **EnergyToken (CET)** | `0x38351EC35A682a037Ac67C5583a751093C188C28` |
-| **EnergyTrade** | `0xE8fdd1d1a13447FaeCE1F5e98da5B049a9331368` |
+| Contract | Address | Explorer |
+|---|---|---|
+| **EnergyToken (CET)** | `0x7223Fb307bD4C48335329CF68098521a59D579Ac` | [View](https://amoy.polygonscan.com/address/0x7223Fb307bD4C48335329CF68098521a59D579Ac) |
+| **EnergyTrade** | `0xE82A1Daad1c4564A4741502c33b4cE4322Da2dc0` | [View](https://amoy.polygonscan.com/address/0xE82A1Daad1c4564A4741502c33b4cE4322Da2dc0) |
 
-Verify on [Polygon Amoy Polygonscan](https://amoy.polygonscan.com)
+**Live on-chain state:**
+```
+EnergyToken.name()          → "CampusEnergyToken"
+EnergyToken.symbol()        → "CET"
+EnergyToken.totalSupply()   → 1,000,000 CET
+EnergyToken.owner()         → 0x258354e5c77b820e0a214daaed05f04126310be3
+EnergyTrade.energyToken()   → 0x7223Fb307bD4C48335329CF68098521a59D579Ac  ✅ linked
+EnergyTrade.listingCount()  → 6
+```
 
 ---
 
 ## 🗺️ System Architecture
 
 ```
-[IoT Simulation Layer]
-  Python MQTT Publisher
-  4 Buildings: Hostel A, Lab Block, Lecture Hall C, Admin Block
-        |
-        | MQTT (broker.hivemq.com)
-        ↓
-[Backend Layer]
-  Node.js + Express
-  MQTT Subscriber → stores latest readings
-  ethers.js → talks to smart contracts
-  REST API → serves frontend
-        |
-        ↓
-[Blockchain Layer]
-  Polygon Amoy Testnet
-  EnergyToken.sol (ERC-20 CET)
-  EnergyTrade.sol (P2P listings + purchases)
-        |
-        ↓
-[Frontend Layer]
-  React.js + Vite + Tailwind CSS
-  Dashboard | Sell Energy | Buy Energy | Trade History
-  MetaMask wallet integration
+┌─────────────────────────────────────────────────────────┐
+│  IoT LAYER  (simulated — physical build pending)        │
+│  meter_simulator.py  → synthetic PZEM-004T readings     │
+│  mqtt_publisher.py   → publishes every 10 s, QoS 1      │
+│  Buildings: Hostel A · Lab Block · Lecture Hall C ·     │
+│             Admin Block                                 │
+└───────────────────────┬─────────────────────────────────┘
+                        │ MQTT  broker.hivemq.com:1883
+                        │ topic campuschain/futminna/{building}
+                        ▼
+┌─────────────────────────────────────────────────────────┐
+│  BACKEND LAYER   Node.js + Express (port 3001)          │
+│  READ-ONLY — holds no private key                       │
+│  mqttService.js      → subscribes, validates, caches    │
+│  contractService.js  → read-only ethers.js bindings     │
+│  routes/energy.js    → GET listings · balance ·         │
+│                        allowance · trades               │
+└───────────────────────┬─────────────────────────────────┘
+                        │ JSON-RPC (read only)
+                        ▼
+┌─────────────────────────────────────────────────────────┐
+│  BLOCKCHAIN LAYER   Polygon Amoy Testnet (chain 80002)  │
+│  EnergyToken.sol  — ERC-20 "CET", 18 decimals           │
+│  EnergyTrade.sol  — listings, purchases, cancellations  │
+│  Events: SurplusListed · TradeExecuted · ListingCancelled│
+└──────────▲────────────────────────────┬─────────────────┘
+           │                            │
+           │ WRITE: signed transactions │ READ: listings,
+           │ (listSurplus, approve,     │ balances, events
+           │  buyEnergy)                ▼
+┌──────────┴──────────────────────────────────────────────┐
+│  PRESENTATION LAYER   React 19 + Vite + Tailwind        │
+│  Dashboard · Sell Energy · Buy Energy · Trade History   │
+│  contracts.js    → addresses, ABIs, chain config        │
+│  WalletConnect   → MetaMask signer, network guard       │
+│                                                          │
+│  Transactions are signed HERE, in the user's wallet,     │
+│  and submitted directly to the chain.                    │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📂 Project Structure
+## 🔄 Trade Lifecycle (Non-Custodial)
 
+Every state-changing transaction is signed in the participant's own wallet — **the backend cannot transact on any user's behalf**.
+
+**Selling**
 ```
-CampusChain-FUTMinna/
-├── contracts/
-│   ├── contracts/
-│   │   ├── EnergyToken.sol       # ERC-20 CET token
-│   │   └── EnergyTrade.sol       # P2P trading contract
-│   ├── test/
-│   │   └── EnergyTrade.test.cjs  # 7 Hardhat tests (all passing)
-│   └── hardhat.config.cjs        # Hardhat config (CJS, not ESM)
-├── backend/
-│   ├── server.js                 # Express app entry point
-│   ├── routes/
-│   │   └── energy.js             # API routes
-│   ├── services/
-│   │   ├── contractService.js    # ethers.js contract connections
-│   │   └── mqttService.js        # MQTT subscriber + meter store
-│   └── .env                      # 🔒 NOT committed (see .gitignore)
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx               # React Router setup
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── WalletConnect.jsx
-│   │   │   └── MeterCard.jsx
-│   │   └── pages/
-│   │       ├── Dashboard.jsx     # Live stats + IoT readings + listings
-│   │       ├── SellEnergy.jsx    # List surplus energy
-│   │       ├── BuyEnergy.jsx     # Browse and buy listings
-│   │       └── TradeHistory.jsx  # All completed trades
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── iot/
-│   ├── meter_simulator.py        # Simulates PZEM-004T sensor data
-│   ├── mqtt_publisher.py         # Publishes to HiveMQ every 10s
-│   └── requirements.txt
-└── README.md
+1. Seller connects MetaMask; app verifies chain ID 80002 (Amoy)
+2. Seller submits the Sell form
+3. Browser calls listSurplus() directly on EnergyTrade
+4. Seller signs in MetaMask  ── one prompt
+5. SurplusListed event emitted; listing recorded under the seller's own address
 ```
+
+**Buying**
+```
+1. Buyer connects MetaMask on a different account
+2. Buyer selects a listing (own listings are disabled)
+3. App computes totalCost = energyAmount x pricePerWh
+4. App checks balanceOf(); insufficient CET is reported before any prompt
+5. App checks allowance(); if short, calls approve()
+      └─ Buyer signs in MetaMask  ── prompt 1 of 2
+6. App calls buyEnergy()
+      └─ Buyer signs in MetaMask  ── prompt 2 of 2
+7. Contract transfers CET buyer → seller and sets isActive = false
+8. TradeExecuted event provides the immutable audit record
+```
+
+---
+
+## 🧪 Test Suite
+
+```powershell
+cd contracts
+npx hardhat test
+```
+```
+  CampusChain Energy Trading
+    ✔ Should deploy both contracts successfully
+    ✔ Should mint tokens to owner on deploy
+    ✔ Should allow seller to list surplus energy
+    ✔ Should allow buyer to purchase energy
+    ✔ Should emit TradeExecuted event on purchase
+    ✔ Should not allow seller to buy their own listing
+    ✔ Should allow seller to cancel their listing
+
+  7 passing (769ms)
+```
+
+---
+
+## 🔧 Resolved Defects
+
+| # | Defect | Resolution |
+|---|---|---|
+| 1 | **Custodial signing.** Backend signed every tx with one server-held key; all listings shared one seller address | `useWallet()` returns contracts bound to the user's MetaMask signer. `SellEnergy`/`BuyEnergy` call contracts from browser |
+| 2 | **Missing ERC-20 approval.** `buyEnergy()` performs `transferFrom`, which reverts without a prior allowance | `BuyEnergy.jsx` reads `allowance()` and issues `approve()` before `buyEnergy()` |
+| 3 | **Private key in backend.** Live key sat in `backend/.env` signing for all users | Backend refactored to read-only. Write endpoints return HTTP 410 |
+| 4 | **Trade History showed listings, not trades.** Page re-rendered listings table | Reads `TradeExecuted` events via `queryFilter` |
+| 5 | **No network validation.** User on Ethereum Mainnet got cryptic failures | Chain ID 80002 detected; orange banner with one-click switch |
+| 6 | **Unvalidated MQTT input.** Malformed payloads corrupted reading cache | Payload schema validated before storage |
+| 7 | **No API input validation.** Invalid addresses gave 500 errors | Address format checked; proper 400/404 responses |
+| 8 | **Serial RPC calls.** `getActiveListing` called in a loop, one round-trip per listing | Parallel `Promise.all` fetch with 8-second cache |
+| 9 | **Debug output in production.** `console.log` shipped in `Dashboard.jsx` | Removed; replaced with connection-error state |
+| 10 | **Hardcoded addresses in four files.** | Centralised in `frontend/src/contracts.js` |
 
 ---
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
-
-- Node.js v18+
-- Python 3.10+
+- **Node.js ≥ 22.13.0** — Hardhat 2.28 refuses to start on Node 20
+- Python ≥ 3.10
+- Git
 - MetaMask browser extension
-- Polygon Amoy testnet MATIC (from [faucet](https://faucet.polygon.technology/))
+- Amoy test MATIC from the [Polygon faucet](https://faucet.polygon.technology/)
 
-### 1. Clone the Repository
-
+### 1. Clone
 ```bash
 git clone https://github.com/Ali6nXI/CampusChain-FUTMinna.git
 cd CampusChain-FUTMinna
 ```
 
-### 2. Backend Setup
-
+### 2. Smart contracts
 ```bash
-cd backend
+cd contracts
+npm install
+npx hardhat compile
+npx hardhat test                                    # 7 passing
+```
+
+### 3. Backend
+```bash
+cd ../backend
 npm install
 ```
 
-Create a `.env` file in the `backend/` folder:
-
+Create `backend/.env` (**never commit this file**):
 ```env
 PORT=3001
-AMOY_RPC_URL=https://rpc-amoy.polygon.technology/
-PRIVATE_KEY=your_wallet_private_key_here
-ENERGY_TOKEN_ADDRESS=0x38351EC35A682a037Ac67C5583a751093C188C28
-ENERGY_TRADE_ADDRESS=0xE8fdd1d1a13447FaeCE1F5e98da5B049a9331368
+AMOY_RPC_URL=https://polygon-amoy-bor-rpc.publicnode.com
+ENERGY_TOKEN_ADDRESS=0x7223Fb307bD4C48335329CF68098521a59D579Ac
+ENERGY_TRADE_ADDRESS=0xE82A1Daad1c4564A4741502c33b4cE4322Da2dc0
 ```
 
-> ⚠️ **Never commit your `.env` file.** It is already listed in `.gitignore`.
-
-Start the backend:
+> **No `PRIVATE_KEY` is required.** The backend is read-only. If you still have a `PRIVATE_KEY` line from an earlier version, delete it.
 
 ```bash
-node server.js
+node server.js        # -> http://localhost:3001
 ```
 
-Backend runs at `http://localhost:3001`
-
-### 3. Frontend Setup
-
+### 4. Frontend
 ```bash
-cd frontend
+cd ../frontend
 npm install
-npm run dev
+npm run dev           # -> http://localhost:5173
 ```
 
-Frontend runs at `http://localhost:5173`
-
-### 4. IoT Simulator Setup
-
+### 5. IoT simulator
 ```bash
-cd iot
+cd ../iot
 pip install -r requirements.txt
 python mqtt_publisher.py
 ```
 
-Publishes simulated meter readings for 4 buildings every 10 seconds to `broker.hivemq.com` on topic `campuschain/futminna/{building}`.
-
 ---
 
-## 🔌 API Endpoints
+## 🔌 REST API Reference
 
-| Method | Endpoint | Description |
+Base URL: `http://localhost:3001`
+
+The API is **read-only**. The backend holds no private key and cannot transact on any user's behalf.
+
+| Method | Endpoint | Purpose |
 |---|---|---|
-| `GET` | `/api/meters` | Latest IoT meter readings for all buildings |
-| `GET` | `/api/energy/listings` | All energy trade listings from contract |
-| `POST` | `/api/energy/list` | Create a new energy listing |
-| `POST` | `/api/energy/buy/:id` | Buy an energy listing by ID |
-| `GET` | `/api/energy/balance/:address` | CET token balance for a wallet address |
+| `GET` | `/` | Health check; reports MQTT status and contract addresses |
+| `GET` | `/api/meters` | Latest cached IoT reading for every building |
+| `GET` | `/api/energy/listings` | All listings from the contract (parallel fetch, 8 s cache) |
+| `GET` | `/api/energy/listings/:id` | A single listing; 404 if not found |
+| `GET` | `/api/energy/balance/:address` | CET balance for a wallet; 400 on malformed address |
+| `GET` | `/api/energy/allowance/:address` | How much CET the trade contract may currently spend |
+| `GET` | `/api/energy/trades` | Completed trades from `TradeExecuted` events |
+
+> **Removed endpoints:** `POST /api/energy/list`, `/buy/:id` and `/cancel/:id` now return **HTTP 410 Gone**. Listing and buying are signed by the user's own wallet.
 
 ---
 
-## 🧪 Smart Contract Tests
-
-```bash
-cd contracts
-npx hardhat test
-```
-
-All 7 tests pass:
+## 📂 Repository Structure
 
 ```
-EnergyTrade
-  ✔ Should list energy for sale
-  ✔ Should allow buying a listing
-  ✔ Should mark listing as inactive after purchase
-  ✔ Should transfer tokens correctly
-  ✔ Should reject purchase with insufficient tokens
-  ✔ Should reject buying own listing
-  ✔ Should emit correct events
+CampusChain-FUTMinna/
+├── contracts/
+│   ├── contracts/
+│   │   ├── EnergyToken.sol          # ERC-20 CET token
+│   │   └── EnergyTrade.sol          # P2P listing + purchase logic
+│   ├── scripts/
+│   │   └── deploy.ts                # deploys token, then trade contract
+│   ├── test/
+│   │   └── EnergyTrade.test.cjs     # 7 Hardhat tests — all passing
+│   └── hardhat.config.cjs
+├── backend/
+│   ├── server.js                    # Express entry point, port 3001
+│   ├── routes/energy.js             # READ-ONLY: listings · balance · trades
+│   ├── services/
+│   │   ├── contractService.js       # read-only ethers.js bindings (no key)
+│   │   └── mqttService.js           # MQTT subscriber, validation, cache
+│   └── .env.example                 # template — copy to .env
+├── frontend/
+│   └── src/
+│       ├── App.jsx                  # React Router + wallet wiring
+│       ├── contracts.js             # addresses, ABIs, Amoy chain config
+│       ├── components/
+│       │   ├── Navbar.jsx           # nav + network warning
+│       │   ├── WalletConnect.jsx    # useWallet() — signer + getContracts()
+│       │   └── MeterCard.jsx
+│       └── pages/
+│           ├── Dashboard.jsx        # balance · counts · live meters · listings
+│           ├── SellEnergy.jsx
+│           ├── BuyEnergy.jsx
+│           └── TradeHistory.jsx
+├── iot/
+│   ├── meter_simulator.py           # synthetic PZEM-004T readings
+│   ├── mqtt_publisher.py            # HiveMQ publisher, 10 s interval
+│   └── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🔄 How a Trade Works
+## ⚠️ Limitations
 
-```
-1. Seller connects MetaMask wallet
-2. Seller submits surplus energy (e.g. 100 Wh @ 1 CET/Wh) on Sell Energy page
-3. Smart contract records the listing on-chain
-4. Buyer sees the listing on Buy Energy page
-5. Buyer clicks "Buy" → MetaMask prompts for approval
-6. Smart contract transfers CET tokens and marks listing complete
-7. Trade is permanently recorded on Polygon Amoy testnet
-8. Verifiable on Polygonscan ✅
-```
-
----
-
-## 📊 Live Dashboard
-
-The dashboard shows:
-- Your CET token balance
-- Number of active listings and completed trades
-- **Live IoT meter readings** (voltage, current, power, energy, surplus) for all 4 buildings, updated every 10 seconds
-- Active energy listings table
-
----
-
-## ⚠️ Disclaimer
-
-This project is an **academic prototype** developed for a postgraduate thesis at FUT Minna. It uses **test tokens only** and does not involve real currency or real energy billing. It is **not intended for production deployment**.
-
----
-
-## 📄 References
-
-| Document | Link |
-|---|---|
-| 📰 2024 FUT Minna Research Paper | [Electrica Journal](https://electricajournal.org/index.php/pub/article/view/1162/1159) |
-| 🎓 FUT Minna PG Thesis Guidelines 2023 | [View Guidelines](http://irepo.futminna.edu.ng:8080/jspui/bitstream/123456789/30099/1/PG%20Thesis%20Guidelines_2023_%20%281%29.pdf) |
-| 🔍 Polygon Amoy Explorer | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
+1. **No physical hardware.** All meter data is synthetic.
+2. **No oracle binding.** Nothing cryptographically links an IoT reading to an on-chain listing.
+3. **No trade demonstrated yet.** Purchase path is implemented and approval flow in place, but no `TradeExecuted` event has fired on-chain.
+4. **Volatile state.** Meter readings live in a plain JS object; backend restart discards history.
+5. **Public, unauthenticated broker.** Anyone may publish to `campuschain/futminna/#`.
+6. **Testnet economics only.** CET has no value and gas is free.
+7. **Local deployment only.** Nothing is hosted; system runs on `localhost`.
+8. **Exposed key still in git history.** `backend/.env` was committed and remains readable in earlier commits.
 
 ---
 
 ## 👤 Author
 
-**Ogangbo Ochoche Joseph**
+**Joseph Ochoche Ogangbo** — 2021/1/84514CF
 Department of Information Technology (IFT)
 School of Information and Communication Technology (SICT)
-Federal University of Technology, Minna — Nigeria
+Federal University of Technology, Minna, Niger State, Nigeria
+
+*Supervised by Prof. Ojerinde*
 
 ---
 
-*Made with ❤️ for smarter, fairer energy on FUTMinna-campus.*
+*Built for smarter, fairer energy on the FUT Minna campus.*
