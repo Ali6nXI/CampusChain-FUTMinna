@@ -1,3 +1,186 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   CampusChain — FUT Minna design system
+   Institutional colour: Purple  |  Motto: Technology for Empowerment
+   ============================================================ */
+
+:root {
+  --futm-purple-950: #1a0b2e;
+  --futm-purple-900: #2d1155;
+  --futm-purple-800: #3d1a6d;
+  --futm-purple-700: #4c1d95;
+  --futm-purple-600: #6d28d9;
+  --futm-purple-500: #8b5cf6;
+  --futm-purple-400: #a78bfa;
+  --futm-gold: #f5b301;
+  --futm-gold-light: #ffd35c;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--futm-purple-950);
+  color: #f4f1fa;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Ambient chain-node backdrop ------------------------------------- */
+.chain-bg {
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 0%,  rgba(109, 40, 217, 0.30), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 85% 10%, rgba(139, 92, 246, 0.18), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(45, 17, 85, 0.65), transparent 70%),
+    var(--futm-purple-950);
+}
+
+.chain-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(167, 139, 250, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.055) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 35%, #000 40%, transparent 100%);
+}
+
+/* --- Glass panel ------------------------------------------------------ */
+.glass {
+  background: linear-gradient(150deg, rgba(61, 26, 109, 0.62), rgba(26, 11, 46, 0.82));
+  border: 1px solid rgba(167, 139, 250, 0.18);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.32);
+}
+
+.glass-hover {
+  transition: transform 0.22s cubic-bezier(.2,.8,.3,1),
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
+}
+.glass-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(167, 139, 250, 0.42);
+  box-shadow: 0 14px 40px rgba(109, 40, 217, 0.30);
+}
+
+/* --- Stat card accent bar --------------------------------------------- */
+.stat-card { position: relative; overflow: hidden; }
+.stat-card::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--futm-gold), var(--futm-purple-500));
+}
+
+/* --- Buttons ---------------------------------------------------------- */
+.btn-gold {
+  background: linear-gradient(135deg, var(--futm-gold), var(--futm-gold-light));
+  color: #2d1155;
+  font-weight: 700;
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 4px 16px rgba(245, 179, 1, 0.22);
+}
+.btn-gold:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(245, 179, 1, 0.34);
+}
+.btn-gold:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.btn-purple {
+  background: linear-gradient(135deg, var(--futm-purple-600), var(--futm-purple-500));
+  color: #fff;
+  font-weight: 600;
+  transition: filter 0.18s ease, transform 0.18s ease;
+}
+.btn-purple:hover:not(:disabled) { filter: brightness(1.12); transform: translateY(-1px); }
+.btn-purple:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* --- Inputs ----------------------------------------------------------- */
+.field {
+  width: 100%;
+  background: rgba(26, 11, 46, 0.66);
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  border-radius: 0.6rem;
+  padding: 0.8rem 1rem;
+  color: #f4f1fa;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.field::placeholder { color: rgba(196, 181, 253, 0.42); }
+.field:focus {
+  outline: none;
+  border-color: var(--futm-gold);
+  box-shadow: 0 0 0 3px rgba(245, 179, 1, 0.14);
+}
+.field:disabled { opacity: 0.5; }
+
+/* --- Nav -------------------------------------------------------------- */
+.nav-link { position: relative; padding-bottom: 3px; transition: color 0.18s ease; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 2px;
+  background: var(--futm-gold);
+  transition: width 0.24s cubic-bezier(.2,.8,.3,1);
+}
+.nav-link:hover::after, .nav-link-active::after { width: 100%; }
+
+/* --- Live pulse ------------------------------------------------------- */
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 9999px;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  70%  { box-shadow: 0 0 0 9px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0  rgba(52, 211, 153, 0); }
+}
+
+/* --- Table ------------------------------------------------------------ */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead th {
+  text-align: left;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(196, 181, 253, 0.72);
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.18);
+}
+.data-table tbody td { padding: 0.9rem 1rem; font-size: 0.9rem; }
+.data-table tbody tr {
+  border-bottom: 1px solid rgba(167, 139, 250, 0.09);
+  transition: background 0.16s ease;
+}
+.data-table tbody tr:hover { background: rgba(109, 40, 217, 0.14); }
+
+/* --- Pills ------------------------------------------------------------ */
+.pill {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.7rem; font-weight: 600;
+  padding: 0.22rem 0.62rem; border-radius: 9999px;
+}
+.pill-active { background: rgba(52, 211, 153, 0.14); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.28); }
+.pill-sold   { background: rgba(167, 139, 250, 0.14); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.28); }
+.pill-warn   { background: rgba(245, 179, 1, 0.14);  color: var(--futm-gold-light); border: 1px solid rgba(245,179,1,0.30); }
+
+/* --- Scrollbar -------------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--futm-purple-950); }
+::-webkit-scrollbar-thumb {
+  background: rgba(109, 40, 217, 0.55);
+  border-radius: 9999px;
+  border: 2px solid var(--futm-purple-950);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.75); }

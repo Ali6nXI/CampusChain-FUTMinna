@@ -1,25 +1,89 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { shortAddr } from "../contracts";
+import logo from "../assets/campuschain-logo.png";
 
-export default function Navbar({ account, onConnect }) {
+export default function Navbar({ account, onConnect, connecting, wrongNetwork, onSwitch }) {
+    const { pathname } = useLocation();
+    const links = [
+        { to: "/", label: "Dashboard" },
+        { to: "/sell", label: "Sell Energy" },
+        { to: "/buy", label: "Buy Energy" },
+        { to: "/history", label: "Trade History" },
+    ];
+
     return (
-        <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-            <div className="flex items-center gap-2">
-                <span className="text-yellow-400 text-2xl">⚡</span>
-                <span className="text-xl font-bold">CampusChain</span>
-                <span className="text-gray-400 text-sm ml-1">FUT Minna</span>
+        <header className="sticky top-0 z-50">
+            {/* Institutional strip */}
+            <div className="bg-futm-950/95 border-b border-futm-400/10 backdrop-blur">
+                <div className="max-w-7xl mx-auto px-6 py-1.5 flex items-center justify-between text-[11px] text-futm-300/70">
+                    <span>Federal University of Technology, Minna &nbsp;·&nbsp; School of ICT</span>
+                    <span className="hidden sm:inline tracking-wide">Technology&nbsp;for&nbsp;Empowerment</span>
+                </div>
             </div>
-            <div className="flex gap-6 text-sm font-medium">
-                <Link to="/" className="hover:text-yellow-400 transition">Dashboard</Link>
-                <Link to="/sell" className="hover:text-yellow-400 transition">Sell Energy</Link>
-                <Link to="/buy" className="hover:text-yellow-400 transition">Buy Energy</Link>
-                <Link to="/history" className="hover:text-yellow-400 transition">Trade History</Link>
-            </div>
-            <button
-                onClick={onConnect}
-                className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-yellow-300 transition"
-            >
-                {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
-            </button>
-        </nav>
+
+            {/* Main bar */}
+            <nav className="bg-futm-900/90 backdrop-blur-md border-b border-futm-400/15">
+                <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+
+                    {/* Brand */}
+                    <Link to="/" className="flex items-center gap-3 group">
+                        <img
+                            src={logo}
+                            alt="CampusChain logo"
+                            width={44}
+                            height={44}
+                            className="w-11 h-11 object-contain drop-shadow-[0_0_12px_rgba(167,139,250,0.45)]
+                                       transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="leading-tight">
+                            <div className="text-lg font-extrabold tracking-tight text-white">
+                                Campus<span className="text-gold">Chain</span>
+                            </div>
+                            <div className="text-[10px] uppercase tracking-[0.16em] text-futm-300/70">
+                                P2P Energy Trading
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* Nav links */}
+                    <div className="flex gap-7 text-sm font-medium order-3 md:order-2 w-full md:w-auto">
+                        {links.map((l) => (
+                            <Link
+                                key={l.to}
+                                to={l.to}
+                                className={`nav-link ${pathname === l.to
+                                    ? "text-gold nav-link-active"
+                                    : "text-futm-300/80 hover:text-white"}`}
+                            >
+                                {l.label}
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Wallet */}
+                    <div className="flex items-center gap-2 order-2 md:order-3">
+                        {account && wrongNetwork && (
+                            <button onClick={onSwitch}
+                                className="pill pill-warn hover:brightness-110 transition"
+                                title="CampusChain runs on Polygon Amoy testnet">
+                                Wrong network — switch
+                            </button>
+                        )}
+                        {account && !wrongNetwork && (
+                            <span className="hidden sm:flex pill pill-active">
+                                <span className="pulse-dot" /> Amoy
+                            </span>
+                        )}
+                        <button
+                            onClick={onConnect}
+                            disabled={connecting}
+                            className="btn-gold px-4 py-2 rounded-lg text-sm"
+                        >
+                            {connecting ? "Connecting…" : account ? shortAddr(account) : "Connect Wallet"}
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
     );
 }

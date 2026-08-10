@@ -11,9 +11,9 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-950 text-white">
+      <div className="min-h-screen chain-bg text-futm-100">
         <Navbar account={account} onConnect={connectWallet} />
-        <main className="max-w-7xl mx-auto">
+        <main className="max-w-7xl mx-auto relative z-10">
           <Routes>
             <Route path="/" element={<Dashboard account={account} />} />
             <Route path="/sell" element={<SellEnergy account={account} />} />
@@ -21,6 +21,13 @@ export default function App() {
             <Route path="/history" element={<TradeHistory />} />
           </Routes>
         </main>
+
+        <footer className="relative z-10 mt-16 border-t border-futm-400/10 bg-futm-950/60">
+          <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-futm-300/50">
+            <span>CampusChain · Department of Information Technology, SICT · FUT Minna</span>
+            <span>Academic prototype — test tokens only, isolated from the national grid</span>
+          </div>
+        </footer>
       </div>
     </Router>
   );
