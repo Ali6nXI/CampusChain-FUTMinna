@@ -348,6 +348,28 @@ footer strong{color:#fff}
 
     <div class="grid g4" id="meter-grid"></div>
 
+    <!-- ===== HARDWARE TRADE CONTROL ===== -->
+    <div class="card" id="trade-ctl" style="margin-top:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+        <div>
+          <h3 style="margin:0">Hardware Trade Control</h3>
+          <p style="font-size:.85rem;color:rgba(196,165,232,.7);margin-top:4px">
+            Sends the settlement signal to the consumer node. Its LED and fan respond within about three seconds.
+          </p>
+        </div>
+        <span class="pill" id="hw-state">Checking…</span>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="hw-on"   class="btn btn-gold">Execute Trade — switch load ON</button>
+        <button id="hw-off"  class="btn btn-ghost">Clear — switch load OFF</button>
+        <button id="hw-demo" class="btn btn-ghost">Demo (15 s auto-clear)</button>
+      </div>
+
+      <div id="hw-log" style="margin-top:14px;font-size:.83rem;color:rgba(196,165,232,.75);
+           font-family:'Cascadia Code',Consolas,monospace;min-height:1.2em"></div>
+    </div>
+
     <div id="meter-empty" class="card" style="text-align:center;padding:34px 24px;display:none">
       <p style="color:#c4a5e8;font-weight:800;margin-bottom:7px">Awaiting telemetry from the ESP32 nodes</p>
       <p style="font-size:.87rem;max-width:520px;margin:0 auto">Nothing has been published to <span class="mono">/meters</span> yet. This dashboard is listening and will populate on its own the moment the first node reports — no refresh needed.</p>
@@ -773,7 +795,7 @@ ENERGY_TRADE_ADDRESS=0xE82A1Daad1c4564A4741502c33b4cE4322Da2dc0
    ============================================================ */
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import { getDatabase, ref, onValue, off }
+import { getDatabase, ref, onValue, off, set }
   from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -867,6 +889,57 @@ try {
       emptyEl.style.display = "block";
       setStatus("Database not reachable — check rules or that RTDB is created");
     });
+  /* ---------- hardware trade control ---------- */
+  const onBtn   = document.getElementById("hw-on");
+  const offBtn  = document.getElementById("hw-off");
+  const demoBtn = document.getElementById("hw-demo");
+  const stateEl = document.getElementById("hw-state");
+  const logEl   = document.getElementById("hw-log");
+  const tradeRef = ref(db, "trade/value");
+
+  const clock = () => new Date().toLocaleTimeString();
+  function log(msg) { logEl.textContent = `[${clock()}]  ${msg}`; }
+
+  function paint(active) {
+    stateEl.className = "pill" + (active ? " pill-active" : "");
+    stateEl.innerHTML = active
+      ? '<span class="pulse-dot"></span> Load energised'
+      : "Load idle";
+  }
+
+  onValue(tradeRef, s => paint(s.val() === true),
+          () => { stateEl.textContent = "Unavailable"; });
+
+  async function fire(v, note) {
+    [onBtn, offBtn, demoBtn].forEach(b => b.disabled = true);
+    try {
+      await set(tradeRef, v);
+      log(note);
+    } catch (e) {
+      log("Failed: " + (e && e.message ? e.message : "write rejected"));
+    } finally {
+      [onBtn, offBtn, demoBtn].forEach(b => b.disabled = false);
+    }
+  }
+
+  onBtn.onclick  = () => fire(true,  "Trade signal sent — consumer node should energise within 3 s");
+  offBtn.onclick = () => fire(false, "Trade cleared — consumer node returning to standby");
+
+  demoBtn.onclick = async () => {
+    await fire(true, "Demo started — load on for 15 s");
+    let n = 15;
+    demoBtn.disabled = true;
+    const t = setInterval(() => {
+      n -= 1;
+      log(`Load energised — clearing in ${n} s`);
+      if (n <= 0) {
+        clearInterval(t);
+        demoBtn.disabled = false;
+        fire(false, "Demo complete — load cleared automatically");
+      }
+    }, 1000);
+  };
+
 } catch (e) {
   console.warn("Firebase init failed:", e && e.message);
   gridEl.innerHTML = "";
@@ -1108,5 +1181,5 @@ if (window.ethereum) {
   window.ethereum.on("chainChanged",    () => location.reload());
 }
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a5deafc3a94ad',t:'MTc4NzgyNjI2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
