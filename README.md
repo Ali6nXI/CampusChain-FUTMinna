@@ -55,20 +55,20 @@ CampusChain addresses these by placing every listing and every trade on a **tamp
 ## ✅ Verified System Status
 
 | Layer | Status | How it was verified |
-|---|---|---|
-| **Smart contracts** | ✅ Deployed & live on-chain | `eth_getCode` returns bytecode at both addresses; `name()` → `CampusEnergyToken`, `symbol()` → `CET`, `totalSupply()` → 1,000,000 CET |
-| **Contract linkage** | ✅ Correct | `EnergyTrade.energyToken()` resolves to the deployed `EnergyToken` address |
-| **On-chain state** | ✅ 6 listings recorded | `listingCount()` → `6`; all six readable via `listings(uint256)` |
-| **Client-side signing** | ✅ Working | Listing 6 (`ROOM1`) was created from the browser via MetaMask, not by a server key |
-| **ERC-20 approval flow** | ✅ Implemented | `BuyEnergy.jsx` reads `allowance()` and calls `approve()` before `buyEnergy()` |
-| **Backend key custody** | ✅ Eliminated | Backend starts and serves all endpoints with **no `PRIVATE_KEY`** in `.env` |
-| **Hardhat test suite** | ✅ 7/7 passing | `npx hardhat test` on a clean clone with no `.env` — 7 passing (763 ms) |
-| **Solidity compilation** | ✅ Clean | 10 Solidity files compiled successfully, solc `0.8.28`, evm target `paris` |
-| **IoT → MQTT pipeline** | ✅ Working | Live publish/subscribe test against `broker.hivemq.com`: 4/4 building payloads delivered; malformed payloads rejected |
-| **Frontend production build** | ✅ Succeeds | `npm run build` → 229 modules transformed, built in 770 ms |
-| **Physical hardware** | ❌ Not implemented | `iot/` contains a numerical simulator only — no Raspberry Pi or PZEM-004T code |
-| **Oracle binding** | ❌ Not implemented | Nothing cryptographically links a meter reading to a listed quantity (see Limitations) |
-
+| --- | --- | --- |
+| **Smart contracts** | ✅ Deployed & live on-chain | eth_getCode returns bytecode at both addresses; name() → CampusEnergyToken, symbol() → CET, totalSupply() → 1,000,000 CET |
+| **Contract linkage** | ✅ Correct | EnergyTrade.energyToken() resolves to the deployed EnergyToken address |
+| **On-chain state** | ✅ Listings recorded | listingCount() readable; listings accessible via listings(uint256) |
+| **Client-side signing** | ✅ Working | Listings and purchases signed from browser via MetaMask (non-custodial) |
+| **ERC-20 approval flow** | ✅ Implemented | BuyEnergy checks allowance() and calls approve() before buyEnergy() |
+| **Backend key custody** | ✅ Eliminated | Backend is fully read-only; no PRIVATE_KEY required |
+| **Hardhat test suite** | ✅ Passing | npx hardhat test — all tests green |
+| **Solidity compilation** | ✅ Clean | Contracts compile successfully (solc 0.8.28) |
+| **IoT → MQTT pipeline** | ✅ Working | Python simulator publishes to HiveMQ; backend receives and validates payloads |
+| **Frontend production build** | ✅ Succeeds | npm run build completes cleanly |
+| **Physical signalling demo** | 🟡 Limited demonstration | Two ESP32 nodes (prosumer + consumer) used to show blockchain settlement → physical load response. Signalling path verified end-to-end. |
+| **Physical energy metering** | ❌ Not verified | Solar generation measured ~0 mW during tests; no claim made on measurement accuracy or real irradiance behaviour |
+| **Oracle binding** | ❌ Not implemented | No cryptographic link yet between meter readings and on-chain listings |
 ---
 
 ## 🛠️ Technology Stack
