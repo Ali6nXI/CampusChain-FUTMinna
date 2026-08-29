@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+﻿import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useWallet } from "./components/WalletConnect";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
@@ -7,17 +7,50 @@ import BuyEnergy from "./pages/BuyEnergy";
 import TradeHistory from "./pages/TradeHistory";
 
 export default function App() {
-  const { account, connectWallet } = useWallet();
+  const {
+    account,
+    connectWallet,
+    connecting,
+    wrongNetwork,
+    switchToAmoy,
+    getContracts,
+  } = useWallet();
 
   return (
     <Router>
       <div className="min-h-screen chain-bg text-futm-100">
-        <Navbar account={account} onConnect={connectWallet} />
+        <Navbar
+          account={account}
+          onConnect={connectWallet}
+          connecting={connecting}
+          wrongNetwork={wrongNetwork}
+          onSwitch={switchToAmoy}
+        />
         <main className="max-w-7xl mx-auto relative z-10">
           <Routes>
             <Route path="/" element={<Dashboard account={account} />} />
-            <Route path="/sell" element={<SellEnergy account={account} />} />
-            <Route path="/buy" element={<BuyEnergy account={account} />} />
+            <Route
+              path="/sell"
+              element={
+                <SellEnergy
+                  account={account}
+                  wrongNetwork={wrongNetwork}
+                  switchToAmoy={switchToAmoy}
+                  getContracts={getContracts}
+                />
+              }
+            />
+            <Route
+              path="/buy"
+              element={
+                <BuyEnergy
+                  account={account}
+                  wrongNetwork={wrongNetwork}
+                  switchToAmoy={switchToAmoy}
+                  getContracts={getContracts}
+                />
+              }
+            />
             <Route path="/history" element={<TradeHistory />} />
           </Routes>
         </main>

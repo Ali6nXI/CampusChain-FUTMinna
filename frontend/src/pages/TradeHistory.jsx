@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import axios from "axios";
 
 const API = "http://localhost:3001";
@@ -13,8 +13,8 @@ export default function TradeHistory() {
 
     const fetchTrades = async () => {
         try {
-            const res = await axios.get(`${API}/api/energy/listings`);
-            setTrades(res.data.listings || []);
+            const res = await axios.get(`${API}/api/energy/trades`);
+            setTrades(res.data.trades || []);
         } catch (err) {
             console.error("Error fetching trade history:", err);
         } finally {
@@ -28,7 +28,7 @@ export default function TradeHistory() {
             <p className="text-futm-300/70 mt-1.5 mb-7 text-sm">View all energy trading activity on campus</p>
 
             {loading ? (
-                <p className="text-futm-300/60 text-sm">Loading trade history…</p>
+                <p className="text-futm-300/60 text-sm">Loading trade historyâ€¦</p>
             ) : trades.length === 0 ? (
                 <div className="glass rounded-2xl p-14 text-center">
                     <p className="text-gray-400 text-lg">No trades recorded yet.</p>
@@ -60,7 +60,7 @@ export default function TradeHistory() {
                                     <td className="text-futm-300/60 font-mono text-xs">
                                         {trade.seller
                                             ? `${trade.seller.slice(0, 6)}...${trade.seller.slice(-4)}`
-                                            : "—"}
+                                            : "â€”"}
                                     </td>
                                     <td >
                                         {trade.isActive ? (
@@ -82,3 +82,4 @@ export default function TradeHistory() {
         </div>
     );
 }
+
