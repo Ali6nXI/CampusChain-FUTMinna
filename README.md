@@ -341,14 +341,27 @@ CampusChain-FUTMinna/
 
 ## ⚠️ Limitations
 
-1. **No physical hardware.** All meter data is synthetic.
-2. **No oracle binding.** Nothing cryptographically links an IoT reading to an on-chain listing.
-3. **No trade demonstrated yet.** Purchase path is implemented and approval flow in place, but no `TradeExecuted` event has fired on-chain.
-4. **Volatile state.** Meter readings live in a plain JS object; backend restart discards history.
-5. **Public, unauthenticated broker.** Anyone may publish to `campuschain/futminna/#`.
-6. **Testnet economics only.** CET has no value and gas is free.
-7. **Local deployment only.** Nothing is hosted; system runs on `localhost`.
-8. **Exposed key still in git history.** `backend/.env` was committed and remains readable in earlier commits.
+CampusChain is an academic prototype. The following limitations apply:
+
+1. **Limited physical hardware**  
+   Two ESP32 demonstration nodes were built to show that a blockchain settlement can trigger a physical load response. Full smart-meter deployment across campus buildings was not performed.
+
+2. **No verified energy metering**  
+   Solar generation was not successfully measured during testing (panel output remained near zero). The system therefore trades digital entitlements rather than verified physical energy.
+
+3. **No physical power transfer**  
+   Energy is not switched or transferred between buildings. The consumer node’s load is powered by its own independent supply.
+
+4. **No oracle binding**  
+   There is currently no cryptographic link between IoT/meter readings and the quantities listed on-chain.
+
+5. **Testnet only**  
+   All transactions use valueless test tokens on Polygon Amoy. No real money or mainnet deployment is involved.
+
+6. **Simulation-based IoT data**  
+   The primary energy data used by the platform comes from a Python simulator rather than live campus meters.
+
+These limitations are intentional for a B.Tech research prototype and are documented so that the system’s actual scope is clear.
 
 ---
 
