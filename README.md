@@ -300,6 +300,7 @@ The API is **read-only**. The backend holds no private key and cannot transact o
 ## 📂 Repository Structure
 
 ```
+## 📂 Repository Structure
 CampusChain-FUTMinna/
 ├── contracts/
 │   ├── contracts/
@@ -334,6 +335,11 @@ CampusChain-FUTMinna/
 │   ├── meter_simulator.py           # synthetic PZEM-004T readings
 │   ├── mqtt_publisher.py            # HiveMQ publisher, 10 s interval
 │   └── requirements.txt
+├── hardware/
+│   ├── README.md                    # Physical demonstration documentation
+│   ├── bridge.py                    # Bridge between on-chain events and external systems
+│   ├── chain_watcher.py             # Watches Polygon Amoy for TradeExecuted events
+│   └── trade.py                     # Helper utilities for trade-related operations
 └── README.md
 ```
 
