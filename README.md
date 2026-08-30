@@ -109,7 +109,7 @@ EnergyTrade.listingCount()  → 6
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  IoT LAYER  (simulated — physical build pending)        │
+│   IoT LAYER  (simulated + limited physical demo)       │
 │  meter_simulator.py  → synthetic PZEM-004T readings     │
 │  mqtt_publisher.py   → publishes every 10 s, QoS 1      │
 │  Buildings: Hostel A · Lab Block · Lecture Hall C ·     │
