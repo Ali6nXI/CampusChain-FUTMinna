@@ -1,4 +1,4 @@
-﻿import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useWallet } from "./components/WalletConnect";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
